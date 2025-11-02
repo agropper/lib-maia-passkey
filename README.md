@@ -74,7 +74,50 @@ Passkey configuration is injectable:
 
 Different apps can use different rpIDs/origins by instantiating with different configs.
 
+## Features
+
+- **Platform authenticators**: Prefers TouchID/FaceID over cross-platform passkeys
+- **Registration flow**: Generate and verify passkey registration
+- **Authentication flow**: Generate and verify passkey authentication
+- **Counter tracking**: Automatic credential counter updates for security
+- **Error handling**: Clear error messages for common failure scenarios
+
+## API Reference
+
+```javascript
+import { PasskeyService } from 'lib-maia-passkey';
+
+const passkeyService = new PasskeyService({
+  rpID: 'user.agropper.xyz',
+  origin: 'https://user.agropper.xyz'
+});
+
+// Registration
+const regOptions = await passkeyService.generateRegistrationOptions({
+  userId: 'user123',
+  displayName: 'User Name'
+});
+
+const regResult = await passkeyService.verifyRegistration({
+  response: credentialResponse,
+  expectedChallenge: regOptions.challenge,
+  userDoc: existingUserDoc
+});
+
+// Authentication
+const authOptions = await passkeyService.generateAuthenticationOptions({
+  userId: 'user123',
+  userDoc: userDoc
+});
+
+const authResult = await passkeyService.verifyAuthentication({
+  response: assertionResponse,
+  expectedChallenge: authOptions.challenge,
+  userDoc: userDoc
+});
+```
+
 ## Status
 
-🚧 In Progress - Initial structure only
+✅ **Complete** - Fully implemented and tested
 
